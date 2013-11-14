@@ -51,4 +51,7 @@ wss.on('connection', function(ws) {
 	ws.on('message', function(addr) {
 		console.log('received: %s on %s', addr, url);
 	});
+	ws.on('close', function() {
+		room.removeClient(ws);
+	});
 });

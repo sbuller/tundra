@@ -3,7 +3,7 @@ HomeCloud opens connections between machines over which changes to configuration
 metadata, and data are shared. Rather than synchronizing all files between
 locations, HomeCloud instead only synchronizes files which are already shared.
 Other files are made available to synchronize in either direction at the user's
-whim. In addition to handling synchonization of files between locations online,
+whim. In addition to handling synchronization of files between locations online,
 HomeCloud also takes care of handling offline synchronization - both between
 computers that don't maintain a permanent internet connection, and between a
 computer and a storage device - for backup or archival purposes.
@@ -14,7 +14,7 @@ tree. To some extent native file operation on devices will be projected back
 onto this tree. Tools are provided to help consolidate disparity between
 HomeCloud's tree and the various device trees. HomeCloud's tree is intended, at
 least down the road, to be more semantic than traditional - even to the point,
-down the road of being entirely database driven rather than simply heirarchical.
+down the road of being entirely relational rather than simply heirarchical.
 
 	In order to help ease management of devices, HomeCloud displays every device
 in the same manner, regardless of the type of connection it has to the cloud - 

@@ -5,8 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "entry": "0.0.9",
-    "stun": "0.0.2",
-    "express": "~3.3.8"
+    "stun": "0.0.2"
   },
   "devDependencies": {},
   "scripts": {
