@@ -1,0 +1,54 @@
+	HomeCloud exists for the purpose of managing files across multiple locations.
+HomeCloud opens connections between machines over which changes to configuration,
+metadata, and data are shared. Rather than synchronizing all files between
+locations, HomeCloud instead only synchronizes files which are already shared.
+Other files are made available to synchronize in either direction at the user's
+whim. In addition to handling synchonization of files between locations online,
+HomeCloud also takes care of handling offline synchronization - both between
+computers that don't maintain a permanent internet connection, and between a
+computer and a storage device - for backup or archival purposes.
+
+	HomeCloud's display revolves around a main file tree. This tree of files is
+considered authoritative; files on devices are inteded to be a view onto this
+tree. To some extent native file operation on devices will be projected back
+onto this tree. Tools are provided to help consolidate disparity between
+HomeCloud's tree and the various device trees. HomeCloud's tree is intended, at
+least down the road, to be more semantic than traditional - even to the point,
+down the road of being entirely database driven rather than simply heirarchical.
+
+	In order to help ease management of devices, HomeCloud displays every device
+in the same manner, regardless of the type of connection it has to the cloud - 
+be it a direct internet connection, or a USB connection under the control of
+another connected machine. HomeCloud stores the file heirarchy of a device to
+display even when it is offline so that operations can be queued in advance to
+simplify management. Format conversion is also provided where necessary.
+
+	A cluster of HomeCloud devices is considered to be a representation of the
+totality of one, and only one user. When adding a machine to a cluster, the
+user must authenticate the addition. Subsequent operations can be performed
+based upon a machine-to-machine authentication. The intent here is to avoid
+saving a password - a password should never be saved. Instead machines share
+tokens to handle authentication.
+
+	HomeCloud finds its configuration in ~/.homecloud, and its database in
+$XDG_DATA_HOME (~/.local/share/homecloud/). ~/.homecloud contains only data
+particular to this machine. It is set up on first run (along with the database),
+which verifies with the local user that the cluster can take action on local
+files, or where it should root the local view of the cluster's files.
+
+	Efficiency is complicated, so rather than trying to be efficient, HomeCloud
+instead is set up to make adding efficiency later as easy as possible. HomeCloud
+takes the easy way out as a start. Maybe down the road this will become important
+enough to warrant the complication. No rsync for now. Too fragile.
+
+	Establishing connectivity is a challenge in todays world of limited addresses
+and prolific NAT. While uPnP may be of some use to configure routers, it doesn't
+work everywhere, and even where it does, it leaves users remembering dynamic
+IP addresses (ugh). While we wait for IPv6 we'll have to instead rely on STUN.
+Anyone who can't use STUN? Well, that sucks - I'm not relaying their traffic.
+HomeCloud uses a webservice, in much the same way as sharefest. The webservice
+can be used to initiate a connection between machines. HomeCloud maintains a
+connection (websocket) with the webservice so that it can be notified when a
+machine wants to make a connection. The webservice, like everything else, is
+encrypted, and can require a login to prevent snoops from trying to connect to
+a cluster.
