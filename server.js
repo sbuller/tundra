@@ -43,12 +43,13 @@ Room.prototype = {
 wss.on('connection', function(ws) {
 	var url = ws.upgradeReq.url;
 	var room = forum.getRoom(url);
+	var int = setInterval(function(){ws.send("ping");}, 30000);
 	room.pairNewClient(ws);
 	ws.on('message', function(addr) {
 		console.log('received: %s on %s', addr, url);
 	});
 	ws.on('close', function() {
 		room.removeClient(ws);
+		clearInterval(int);
 	});
-	setInterval(function(){ws.send("ping");}, 30000);
 });
