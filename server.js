@@ -3,11 +3,6 @@ var WSS = require('ws').Server;
 var wss = new WSS({port: 8080});
 var net = require('net');
 
-function validAddress(addr) {
-	var x = addr.split(':');
-	return x.length === 2 && net.isIP(x[0]) && 0 < x[1] && x[1] < 65536;
-}
-
 function pairClients(client1, client2) {
 	client1.send("hello");
 	client2.send("hello");
