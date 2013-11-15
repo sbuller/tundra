@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var WSS = require('ws').Server;
-var wss = new WSS({port: 80});
+var port = process.env.PORT || 5000;
+var wss = new WSS({port: port});
 var net = require('net');
 
 function pairClients(client1, client2) {
