@@ -11,6 +11,8 @@ room.on('message', function(m) {
 	if (m === "hello") {
 		console.log("%s: got a hello", process.pid);
 		room.send("192.168.254.100:" + process.pid);
+	} else if (m === "ping") {
+		//ignore a ping
 	} else {
 		console.log("%s: hope it's an address: %s", process.pid, m);
 	}

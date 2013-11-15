@@ -50,4 +50,5 @@ wss.on('connection', function(ws) {
 	ws.on('close', function() {
 		room.removeClient(ws);
 	});
+	setInterval(function(){ws.send("ping");}, 30000);
 });
