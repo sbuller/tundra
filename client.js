@@ -5,7 +5,8 @@ function connect(host, room) {
 	return new WS('ws://'+host+'/'+room);
 }
 
-var room = connect('localhost:8080', 'test');
+//var room = connect('localhost:8080', 'test');
+var room = connect('intense-tundra-4850.herokuapp.com', 'test');
 room.on('message', function(m) {
 	if (m === "hello") {
 		console.log("%s: got a hello", process.pid);
