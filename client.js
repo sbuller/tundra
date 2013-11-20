@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 var WS = require('ws');
 var stun = require('vs-stun');
+var events = require('events');
+var stream = require('stream');
+var util = require('util');
 
 function validAddress(addr) {
 	var x = addr.split(':');
@@ -33,22 +36,40 @@ function getSocket(cb) {
 	}
 }
 
-function Peer(cb) {
+function Peer() {
+	if (!(this instanceof Peer))
+		return new Peer;
+	stream.Duplex.call(this);
 	getSocket(this.initSocket.bind(this));
 }
+util.inherits(Peer, stream.Duplex);
 Peer.prototype = {
 	initSocket: function(socket) {
+		var self = this;
 		if (!socket) return;
 		this.peer = socket;
 		this.host = socket.stun.public.host;
 		this.port = socket.stun.public.host;
+		this.emit("socketReady");
+		this.peer.on('data', function(data) {
+			self.push(data);
+		});
+		this.peer.on('close', function() {
+			self.push(null);
+		});
 	},
-	send: function (str) {
-		if (this.peer && this.port && this.host) {
-			this.peer.send( new Buffer(str), 0, str.length, this.port, this.host );
+	_write: function (chunk, encoding, callback) {
+		if (this.peer && this.remotePort && this.remoteHost) {
+			this.peer.send( chunk, 0, chunk.length, this.remotePort, this.remoteHost );
+			callback();
 		} else {
-			throw "port and host not set";
+			callback("port and host not set");
 		}
+	},
+	_read: function() {},
+	attach: function(host, port) {
+		this.remoteHost = host;
+		this.remotePort = port;
 	}
 }
 
@@ -61,13 +82,12 @@ var room = new WS(process.argv[2]);
 room.on('message', function(m) {
 	var c;
 	if (m === "hello") {
-		c = new Peer(function(address) {
-			room.send(address);
-		});
+		c = new Peer();
 		console.log("%s: got a hello", process.pid);
 	} else if (m === "ping") {
 		//ignore a ping
 	} else {
+		c.attach(address);
 		console.log("%s: hope it's an address: %s", process.pid, m);
 	}
 });
