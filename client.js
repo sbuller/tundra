@@ -76,6 +76,21 @@ Peer.prototype.attach = function(host, port) {
 	this.remotePort = port;
 };
 
+function connect(peer, cb) {
+	peer.write("syn");
+	peer.write("syn");
+	var int = setInterval("peer.write('syn');", 1000);
+	setTimeout("clearInterval(int)", 10000);
+	peer.on('data', function(data) {
+		if (data === "syn") {
+			peer.write("ack");
+		} else if (data === "ack") {
+			clearInterval(int);
+			cb(peer);
+		}
+	});
+}
+
 if (process.argv.length !== 3) {
 	console.log("Usage: node %s <address>", process.argv[1]);
 	process.exit(1);
@@ -89,7 +104,9 @@ room.on('message', function(m) {
 		peer.on("socketReady", function() {
 			room.send(peer.host + ":" + peer.port);
 		});
-		process.stdin.pipe(peer);
+		connect(peer, function() {
+			peer.write("Hey there");
+		});
 		peer.pipe(process.stdout);
 		peer.on('data', function(data) {
 			console.log("we get data %s", data);
