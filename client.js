@@ -34,31 +34,18 @@ function getSocket(cb) {
 }
 
 function Peer(cb) {
-	var that = this;
-	getSocket(function(socket) {
-		if (!socket) {
-			console.log("no socket :(");
-			return;
-		}
-		that.peer = socket;
-		that.myHost = socket.stun.public.host;
-		that.myPort = socket.stun.public.port;
-		console.log("got socket");
-		that.peer.on("response", function(packet) {
-			var attr = stun.attribute.MAPPED_ADDRESS;
-			var ip = packet.attrs[attr].address;
-			var port = packet.attrs[attr].port;
-			var address = ip + ":" + port;
-			console.log("got a this: %s", this);
-			cb(address);
-		});
-	});
-	return this;
+	getSocket(this.initSocket.bind(this));
 }
 Peer.prototype = {
+	initSocket: function(socket) {
+		if (!socket) return;
+		this.peer = socket;
+		this.host = socket.stun.public.host;
+		this.port = socket.stun.public.host;
+	},
 	send: function (str) {
-		if (this.port && this.host) {
-			this.client.send( new Buffer(str), 0, str.length, this.port, this.host );
+		if (this.peer && this.port && this.host) {
+			this.peer.send( new Buffer(str), 0, str.length, this.port, this.host );
 		} else {
 			throw "port and host not set";
 		}
