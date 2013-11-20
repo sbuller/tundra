@@ -5,8 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "entry": "0.0.9",
-    "stun": "0.0.2",
-    "ws": "~0.4.31"
+    "ws": "~0.4.31",
+    "vs-stun": "0.0.7"
   },
   "devDependencies": {},
   "scripts": {
